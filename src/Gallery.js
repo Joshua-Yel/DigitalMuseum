@@ -4,8 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 function Gallery() {
   const { category } = useParams();
   const navigate = useNavigate();
-  const [selectedImage, setSelectedImage] = useState(null);
   const [activeCategory, setActiveCategory] = useState(category || "painting");
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const imageData = {
     painting: [
@@ -109,67 +109,86 @@ function Gallery() {
 
   const images = imageData[activeCategory.toLowerCase()] || [];
 
+  const handleImageClick = (direction) => {
+    if (direction === "left") {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      );
+    } else {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }
+  };
+
   return (
     <div className="gallery-container">
-      <div className="gallery-overlay"></div>
-
-      {/* Category Filter Buttons */}
-      <div className="gallery-filters">
-        {["Painting", "Sculpture", "Sketches"].map((cat) => (
-          <button
-            key={cat}
-            onClick={() => {
-              setActiveCategory(cat.toLowerCase());
-              navigate(`/gallery/${cat.toLowerCase()}`);
-            }}
-            className={`gallery-filter-btn ${
-              activeCategory === cat.toLowerCase() ? "active" : ""
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
       <h1 className="gallery-title">
         {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}{" "}
         Gallery
       </h1>
 
-      <div className="gallery-grid">
-        {images.map((image, index) => (
-          <div
-            key={index}
-            className="gallery-item"
-            onClick={() => setSelectedImage(image.src)}
-          >
-            <img
-              src={image.src}
-              alt={image.title}
-              className="gallery-image"
-              loading="lazy"
-            />
-            <div className="gallery-hover-overlay">
-              <p className="gallery-text">{image.title}</p>
-            </div>
-          </div>
-        ))}
+      <div className="carousel-container">
+        {images.length > 1 && (
+          <img
+            src={images[(currentIndex - 1 + images.length) % images.length].src}
+            alt="Previous"
+            className="side-image left"
+            onClick={() => handleImageClick("left")}
+          />
+        )}
+        <img
+          src={images[currentIndex].src}
+          alt={images[currentIndex].title}
+          className="main-image"
+        />
+        {images.length > 1 && (
+          <img
+            src={images[(currentIndex + 1) % images.length].src}
+            alt="Next"
+            className="side-image right"
+            onClick={() => handleImageClick("right")}
+          />
+        )}
       </div>
 
-      {/* Lightbox for Enlarged View */}
-      {selectedImage && (
+      <div className="category-container">
         <div
-          className="lightbox"
-          onClick={() => setSelectedImage(null)}
+          className={`category-item ${
+            activeCategory === "painting" ? "active" : ""
+          }`}
+          onClick={() => {
+            setActiveCategory("painting");
+            navigate("/gallery/painting");
+          }}
         >
-          <img
-            src={selectedImage}
-            alt="Enlarged artwork"
-            className="lightbox-image"
-          />
+          Painting
         </div>
-      )}
+        <div
+          className={`category-item ${
+            activeCategory === "sculpture" ? "active" : ""
+          }`}
+          onClick={() => {
+            setActiveCategory("sculpture");
+            navigate("/gallery/sculpture");
+          }}
+        >
+          Sculpture
+        </div>
+        <div
+          className={`category-item ${
+            activeCategory === "sketches" ? "active" : ""
+          }`}
+          onClick={() => {
+            setActiveCategory("sketches");
+            navigate("/gallery/sketches");
+          }}
+        >
+          Sketches
+        </div>
+      </div>
     </div>
   );
 }
+
 export default Gallery;
