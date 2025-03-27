@@ -211,37 +211,43 @@ font-style: normal;
   z-index: 2;
 }
 
-/* ======= Main Image Styling ======= */
+.main-image, .side-image {
+  user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
 .main-image {
-  width: 60%;
-  max-height: auto !important;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 2px solid white;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  width: auto;
+  max-height: 800px;
+  transition: transform 0.3s ease-in-out;
 }
 
-/* ======= Side Image Styling ======= */
 .side-image {
-  width: 18%;
-  max-height: 280px;
+  width: 20%;
+  opacity: 0.7;
   cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-  border-radius: 8px;
+  transition: transform 0.3s ease-in-out;
 }
 
 .side-image:hover {
-  opacity: 1;
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
-/* Flip the left image */
-.left {
-  transform: scaleX(-1);
+.category-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
+.category-item {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.category-item.active {
+  font-weight: bold;
+  color: blue;
+}
 /* ======= Responsive Design ======= */
 @media (max-width: 1024px) {
   .gallery-title {

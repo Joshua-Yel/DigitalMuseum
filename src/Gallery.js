@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSwipeable } from "react-swipeable";
 
 function Gallery() {
   const { category } = useParams();
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState(category);
+  const [activeCategory, setActiveCategory] = useState(category || "painting");
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const imageData = {
@@ -109,17 +110,24 @@ function Gallery() {
 
   const images = imageData[activeCategory.toLowerCase()] || [];
 
-  const handleImageClick = (direction) => {
+  const handleSwipe = (direction) => {
     if (direction === "left") {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === 0 ? images.length - 1 : prevIndex - 1
-      );
-    } else {
       setCurrentIndex((prevIndex) =>
         prevIndex === images.length - 1 ? 0 : prevIndex + 1
       );
+    } else if (direction === "right") {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      );
     }
   };
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => handleSwipe("left"),
+    onSwipedRight: () => handleSwipe("right"),
+    preventScrollOnSwipe: true,
+    trackMouse: true,
+  });
 
   return (
     <div className="gallery-container">
@@ -128,13 +136,15 @@ function Gallery() {
         Gallery
       </h1>
 
-      <div className="carousel-container">
+      <div
+        className="carousel-container"
+        {...handlers}
+      >
         {images.length > 1 && (
           <img
             src={images[(currentIndex - 1 + images.length) % images.length].src}
             alt="Previous"
             className="side-image left"
-            onClick={() => handleImageClick("left")}
           />
         )}
         <img
@@ -147,45 +157,25 @@ function Gallery() {
             src={images[(currentIndex + 1) % images.length].src}
             alt="Next"
             className="side-image right"
-            onClick={() => handleImageClick("right")}
           />
         )}
       </div>
 
       <div className="category-container">
-        <div
-          className={`category-item ${
-            activeCategory === "painting" ? "active" : ""
-          }`}
-          onClick={() => {
-            setActiveCategory("painting");
-            navigate("/gallery/painting");
-          }}
-        >
-          Painting
-        </div>
-        <div
-          className={`category-item ${
-            activeCategory === "sculpture" ? "active" : ""
-          }`}
-          onClick={() => {
-            setActiveCategory("sculpture");
-            navigate("/gallery/sculpture");
-          }}
-        >
-          Sculpture
-        </div>
-        <div
-          className={`category-item ${
-            activeCategory === "sketches" ? "active" : ""
-          }`}
-          onClick={() => {
-            setActiveCategory("sketches");
-            navigate("/gallery/sketches");
-          }}
-        >
-          Sketches
-        </div>
+        {Object.keys(imageData).map((cat) => (
+          <div
+            key={cat}
+            className={`category-item ${
+              activeCategory === cat ? "active" : ""
+            }`}
+            onClick={() => {
+              setActiveCategory(cat);
+              navigate(`/gallery/${cat}`);
+            }}
+          >
+            {cat.charAt(0).toUpperCase() + cat.slice(1)}
+          </div>
+        ))}
       </div>
     </div>
   );
