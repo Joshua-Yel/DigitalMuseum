@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 function Gallery() {
   const { category } = useParams();
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState(category || "painting");
+  const [activeCategory, setActiveCategory] = useState(category);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const imageData = {
