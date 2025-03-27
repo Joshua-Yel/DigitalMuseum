@@ -122,10 +122,10 @@ function Gallery() {
     }
   };
 
-  const handlers = useSwipeable({
+  const swipeHandlers = useSwipeable({
     onSwipedLeft: () => handleSwipe("left"),
     onSwipedRight: () => handleSwipe("right"),
-    preventScrollOnSwipe: true,
+    preventDefaultTouchmoveEvent: true,
     trackMouse: true,
   });
 
@@ -138,25 +138,28 @@ function Gallery() {
 
       <div
         className="carousel-container"
-        {...handlers}
+        {...swipeHandlers}
       >
         {images.length > 1 && (
           <img
             src={images[(currentIndex - 1 + images.length) % images.length].src}
             alt="Previous"
             className="side-image left"
+            draggable="false"
           />
         )}
         <img
           src={images[currentIndex].src}
           alt={images[currentIndex].title}
           className="main-image"
+          draggable="false"
         />
         {images.length > 1 && (
           <img
             src={images[(currentIndex + 1) % images.length].src}
             alt="Next"
             className="side-image right"
+            draggable="false"
           />
         )}
       </div>
