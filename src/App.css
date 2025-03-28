@@ -73,15 +73,24 @@ font-style: normal;
 }
 
 .artist-image {
-  width: 250px;
-  margin-bottom: 20px;
+  max-width: 100%;
+  height: auto;
+  max-height: 300px;
+  margin-bottom: 2rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+.title-container {
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
 .home-title {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
+  font-size: 4rem;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.1;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }
-
 .home-buttons {
   display: flex;
   gap: 20px;
@@ -101,6 +110,55 @@ font-style: normal;
 .home-button:hover {
   background: white;
   transform: scale(1.1);
+}
+
+
+.category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.category-button {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  border: none;
+  outline: none;
+}
+
+.category-button:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.category-icon-home {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.category-name {
+  font-size: 1rem;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 /* ======= Desktop Layout (Adjustments for Large Screens) ======= */
@@ -168,7 +226,7 @@ font-style: normal;
     transform: scale(1.05);
   }
 }
-/* ======= Gallery Container ======= */
+/* Gallery.css */
 .gallery-container {
   position: relative;
   min-height: 100vh;
@@ -178,9 +236,9 @@ font-style: normal;
   align-items: center;
   padding: 60px 20px;
   overflow: hidden;
+  font-family: "audrielle-no1", sans-serif;
 }
 
-/* ======= Gallery Title ======= */
 .gallery-title {
   font-size: 5.5rem;
   color: white;
@@ -189,122 +247,87 @@ font-style: normal;
   z-index: 2;
   font-family: "audrielle-no1", sans-serif;
   font-weight: 400;
-  font-style: normal;
   text-align: center;
 }
 
-/* ======= Carousel Container ======= */
-.carousel-container {
+.carousel-track {
+  position: relative;
+  width: 100%;
+  height: 50vh;
+  max-height: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  width: 80%;
-  max-width: 900px;
-  height: 450px;
-  overflow: hidden;
-  z-index: 2;
+  touch-action: pan-y;
 }
 
-/* ======= Image Styles ======= */
-.main-image, .side-image {
-  user-drag: none;
-  user-select: none;
-  pointer-events: none;
-  transition: transform 0.3s ease-in-out;
-}
-
-.main-image {
-  width: auto;
-  max-height: 450px;
+.gallery-card {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  width: 60vw;
+  max-width: 500px;
+  height: 50vh;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform, opacity;
+}
+
+.gallery-card.main {
+  width: 70vw;
+  max-width: 600px;
+  height: 55vh;
+  max-height: 550px;
   z-index: 3;
 }
 
-.side-image {
-  position: absolute;
-  width: 40%;
-  opacity: 0.6;
-  transition: transform 0.3s ease-in-out;
+.gallery-card.side {
+  width: 50vw;
+  max-width: 400px;
+  height: 45vh;
+  max-height: 450px;
+  z-index: 1;
 }
 
-.side-image.left {
-  left: 5%;
-  transform: scale(0.9);
-  z-index: 2;
+.gallery-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  user-select: none;
+  pointer-events: none;
+}
+.gallery-card img:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+.image-info {
+  margin-top: 15px;
+  color: white;
+  text-align: center;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+.image-info h3 {
+  font-size: 1.6rem;
+  font-weight:200;
+  font-style: italic;
+  margin: 0;
+  font-family: "audrielle-no2";
 }
 
-.side-image.right {
-  right: 5%;
-  transform: scale(0.9);
-  z-index: 2;
-}
-
-/* ======= Mobile Adjustments ======= */
-@media (max-width: 768px) {
-  .gallery-title {
-    font-size: 3rem;
-  }
-  .carousel-container {
-    height: 300px;
-  }
-  .main-image {
-    max-height: 250px;
-  }
-  .side-image {
-    width: 30%;
-    opacity: 0.6;
-  }
-  .side-image.left {
-    left: 5%;
-    transform: scale(0.85);
-  }
-  .side-image.right {
-    right: 5%;
-    transform: scale(0.85);
-  }
-}
-
-/* ======= Extra Small Screens (Phones) ======= */
-@media (max-width: 480px) {
-  .gallery-title {
-    font-size: 2.5rem;
-  }
-  .carousel-container {
-    height: 250px;
-  }
-  .main-image {
-    max-height: 200px;
-  }
-  .side-image {
-    width: 25%;
-    opacity: 0.5;
-  }
-  .side-image.left {
-    left: 3%;
-    transform: scale(0.8);
-  }
-  .side-image.right {
-    right: 3%;
-    transform: scale(0.8);
-  }
-}
-
-/* ======= Category Container ======= */
 .category-container {
   display: flex;
   justify-content: center;
   gap: 20px;
   margin-top: 30px;
+  flex-wrap: wrap;
 }
 
-/* ======= Category Buttons (Circular) ======= */
 .category-item {
-  width: 100px;
-  height: 100px;
+  width: 110px;
+  height: 110px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
@@ -316,13 +339,134 @@ font-style: normal;
   transition: all 0.3s ease-in-out;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
+  text-align: center;
+  padding: 10px;
+}
+
+.category-item:hover {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.category-item.active {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.category-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 8px;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .gallery-title {
+    font-size: 3rem;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    font-weight:200;
+    font-style: italic;
+    margin: 0;
+    font-family: "audrielle-no2";
+    
+  }
+  
+  .carousel-track {
+    height: 40vh;
+  }
+  
+  .gallery-card {
+    width: 80vw;
+    height: 40vh;
+  }
+  
+  .gallery-card.main {
+    width: 85vw;
+    height: 45vh;
+  }
+  
+  .gallery-card.side {
+    width: 70vw;
+    height: 35vh;
+  }
+  
+  .category-item {
+    width: 90px;
+    height: 90px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-title {
+    font-size: 2.5rem;
+  }
+  
+  .carousel-track {
+    height: 35vh;
+  }
+  
+  .gallery-card {
+    width: 85vw;
+    height: 35vh;
+  }
+  
+  .gallery-card.main {
+    width: 90vw;
+    height: 40vh;
+  }
+  
+  .gallery-card.side {
+    width: 75vw;
+    height: 30vh;
+  }
+  
+  .category-item {
+    margin-top: 40px;
+    width: 80px;
+    height: 80px;
+    font-size: 0.8rem;
+  }
+  
+  .category-icon {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* ======= Icon Styling ======= */
+.category-item img {
+  width: 50px;  /* Adjust size based on design */
+  height: 50px;
+  margin-bottom: 8px; /* Space between icon and text */
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2)); /* Optional: Add slight shadow */
+}
+
+/* ======= Hover Effect ======= */
+.category-item:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+/* ======= Active State ======= */
+.category-item.active {
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+  border: 2px solid white;
 }
 
 /* ======= Mobile Button Adjustments ======= */
 @media (max-width: 768px) {
   .category-item {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
+    font-size: 0.9rem;
+  }
+
+  .category-item img {
+    width: 40px;
+    height: 40px;
+  }
+  .image-title {
     font-size: 0.9rem;
   }
 }
@@ -331,9 +475,18 @@ font-style: normal;
   .category-container {
     gap: 10px;
   }
+  
   .category-item {
-    width: 70px;
-    height: 70px;
+    width: 75px;
+    height: 75px;
+    font-size: 0.8rem;
+  }
+
+  .category-item img {
+    width: 35px;
+    height: 35px;
+  }
+  .image-title {
     font-size: 0.8rem;
   }
 }

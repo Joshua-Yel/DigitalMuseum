@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSwipeable } from "react-swipeable";
 
@@ -7,6 +7,9 @@ function Gallery() {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState(category || "painting");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef(null);
 
   const imageData = {
     painting: [
@@ -110,78 +113,138 @@ function Gallery() {
 
   const images = imageData[activeCategory.toLowerCase()] || [];
 
-  const handleSwipe = (direction) => {
-    if (direction === "left") {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === images.length - 1 ? 0 : prevIndex + 1
-      );
-    } else if (direction === "right") {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === 0 ? images.length - 1 : prevIndex - 1
-      );
-    }
+  const getAdjacentImages = () => {
+    const prevIndex = (currentIndex - 1 + images.length) % images.length;
+    const nextIndex = (currentIndex + 1) % images.length;
+    return [images[prevIndex], images[currentIndex], images[nextIndex]];
   };
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => handleSwipe("left"),
-    onSwipedRight: () => handleSwipe("right"),
-    preventDefaultTouchmoveEvent: true,
+    onSwiping: ({ deltaX }) => {
+      setIsDragging(true);
+      setOffset(deltaX);
+    },
+    onSwiped: () => {
+      const threshold = containerRef.current?.offsetWidth * 0.2;
+      if (Math.abs(offset) > threshold) {
+        setCurrentIndex((prev) =>
+          offset > 0
+            ? (prev - 1 + images.length) % images.length
+            : (prev + 1) % images.length
+        );
+      }
+      setIsDragging(false);
+      setOffset(0);
+    },
     trackMouse: true,
+    preventDefaultTouchmoveEvent: true,
   });
 
   return (
-    <div className="gallery-container">
+    <div
+      className="gallery-container"
+      ref={containerRef}
+    >
       <h1 className="gallery-title">
         {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}{" "}
         Gallery
       </h1>
 
       <div
-        className="carousel-container"
+        className="carousel-track"
         {...swipeHandlers}
       >
-        {images.length > 1 && (
-          <img
-            src={images[(currentIndex - 1 + images.length) % images.length].src}
-            alt="Previous"
-            className="side-image left"
-            draggable="false"
-          />
-        )}
-        <img
-          src={images[currentIndex].src}
-          alt={images[currentIndex].title}
-          className="main-image"
-          draggable="false"
-        />
-        {images.length > 1 && (
-          <img
-            src={images[(currentIndex + 1) % images.length].src}
-            alt="Next"
-            className="side-image right"
-            draggable="false"
-          />
+        {getAdjacentImages().map(
+          (image, index) =>
+            image && (
+              <div
+                key={`${image.src}-${index}`}
+                className={`gallery-card ${index === 1 ? "main" : "side"}`}
+                style={getCardStyle(index, offset)}
+              >
+                <img
+                  src={image.src}
+                  alt={image.title}
+                  draggable="false"
+                />
+                {index === 1 && (
+                  <div className="image-info">
+                    <h3>{image.title}</h3>
+                  </div>
+                )}
+              </div>
+            )
         )}
       </div>
 
       <div className="category-container">
-        {Object.keys(imageData).map((cat) => (
-          <div
-            key={cat}
-            className={`category-item ${
-              activeCategory === cat ? "active" : ""
-            }`}
-            onClick={() => {
-              setActiveCategory(cat);
-              navigate(`/gallery/${cat}`);
-            }}
-          >
-            {cat.charAt(0).toUpperCase() + cat.slice(1)}
-          </div>
-        ))}
+        {Object.keys(imageData).map((cat) => {
+          const icons = {
+            painting: "/paintinggg.png",
+            sculpture: "/sculptureee.png",
+            sketches: "/sketchesss.png",
+          };
+
+          return (
+            <div
+              key={cat}
+              className={`category-item ${
+                activeCategory === cat ? "active" : ""
+              }`}
+              onClick={() => {
+                setActiveCategory(cat);
+                setCurrentIndex(0);
+                navigate(`/gallery/${cat}`);
+              }}
+            >
+              <img
+                src={icons[cat]}
+                alt={`${cat} icon`}
+                className="category-icon"
+              />
+              {cat.charAt(0).toUpperCase() + cat.slice(1)}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
+
+  function getCardStyle(positionIndex, dragOffset) {
+    const isMain = positionIndex === 1;
+    const position = positionIndex - 1; // -1: left, 0: center, 1: right
+
+    // Base transforms without dragging
+    let transform = "";
+    let scale = 1;
+    let zIndex = 1;
+    let opacity = 0.8;
+
+    if (isMain) {
+      transform = `translateX(${dragOffset}px)`;
+      scale = 1;
+      zIndex = 3;
+      opacity = 1;
+    } else {
+      const basePosition = position * 80; // 80% offset for side images
+      transform = `translateX(calc(${basePosition}% + ${dragOffset * 0.5}px))`;
+      scale = 0.7;
+      zIndex = 1;
+      opacity = 0.8 - Math.abs(dragOffset) / 1000;
+    }
+
+    return {
+      transform: `${transform} scale(${scale})`,
+      zIndex,
+      opacity,
+      transition: isDragging
+        ? "none"
+        : "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
+      filter: isMain
+        ? "drop-shadow(0 8px 15px rgba(0,0,0,0.3))"
+        : "drop-shadow(0 4px 8px rgba(0,0,0,0.2))",
+    };
+  }
 }
 
 export default Gallery;

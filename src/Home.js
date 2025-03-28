@@ -8,6 +8,12 @@ function Home() {
     navigate(`/gallery/${category.toLowerCase()}`);
   };
 
+  const categories = [
+    { name: "Painting", img: "/paintinggg.png" },
+    { name: "Sculpture", img: "/sculptureee.png" },
+    { name: "Sketches", img: "/sketchesss.png" },
+  ];
+
   return (
     <div className="home-container">
       <div className="home-overlay"></div>{" "}
@@ -29,14 +35,24 @@ function Home() {
         </div>
 
         {/* Category Buttons */}
-        <div className="home-buttons">
-          {["Sketches", "Painting", "Sculpture"].map((category) => (
+        <div className="category-buttons">
+          {categories.map((category) => (
             <button
-              key={category}
-              onClick={() => handleCategoryClick(category)}
-              className="home-button"
+              key={category.name}
+              className="category-button"
+              onClick={() => handleCategoryClick(category.name)}
+              aria-label={`View ${category.name} gallery`}
             >
-              {category}
+              <img
+                src={category.img}
+                alt=""
+                className="category-icon-home"
+                onError={(e) => {
+                  e.target.src = "/icons/default-category.png";
+                  e.target.style.opacity = "0.7";
+                }}
+              />
+              {/* <span className="category-name">{category.name}</span> */}
             </button>
           ))}
         </div>

@@ -4,6 +4,7 @@ import "./App.css";
 import Home from "./Home";
 import Gallery from "./Gallery";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Painting from "./Painting";
 
 function App() {
   return (
@@ -31,6 +32,10 @@ function App() {
           <Route
             path="/gallery/:category"
             element={<Gallery />}
+          />
+          <Route
+            path="/paintingtest"
+            element={<Painting />}
           />
         </Routes>
       </div>
