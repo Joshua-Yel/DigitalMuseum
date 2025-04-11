@@ -121,8 +121,9 @@ font-style: normal;
 .artist-image {
   max-width: 100%;
   height: auto;
-  max-height: 300px;
-  margin-bottom: 2rem;
+  max-height: 380px;
+  margin-bottom: 1rem;
+  top: -10px;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
 }
 .title-container {
@@ -324,8 +325,6 @@ font-style: normal;
   height: 55vh;
   max-height: 550px;
   z-index: 3;
-  transform: scale(1.05);
-  top: 5%;
 }
 
 .gallery-card.side {
@@ -337,8 +336,8 @@ font-style: normal;
 }
 
 .gallery-card img {
-  width: 110%;
-  height: 110%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   border-radius: 8px;
   user-select: none;
