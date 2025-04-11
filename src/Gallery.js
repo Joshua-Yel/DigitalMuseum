@@ -7,8 +7,8 @@ function Gallery() {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState(category || "painting");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [offset, setOffset] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
+  const [swipeOffset, setSwipeOffset] = useState(0);
+  const [isSwiping, setIsSwiping] = useState(false);
   const containerRef = useRef(null);
 
   const imageData = {
@@ -112,8 +112,9 @@ function Gallery() {
   };
 
   const images = imageData[activeCategory.toLowerCase()] || [];
+  const containerWidth = containerRef.current?.offsetWidth || 0;
 
-  const getAdjacentImages = () => {
+  const getVisibleImages = () => {
     const prevIndex = (currentIndex - 1 + images.length) % images.length;
     const nextIndex = (currentIndex + 1) % images.length;
     return [images[prevIndex], images[currentIndex], images[nextIndex]];
@@ -121,24 +122,58 @@ function Gallery() {
 
   const swipeHandlers = useSwipeable({
     onSwiping: ({ deltaX }) => {
-      setIsDragging(true);
-      setOffset(deltaX);
+      setIsSwiping(true);
+      setSwipeOffset(deltaX);
     },
     onSwiped: () => {
-      const threshold = containerRef.current?.offsetWidth * 0.2;
-      if (Math.abs(offset) > threshold) {
+      const threshold = containerWidth * 0.25;
+      if (Math.abs(swipeOffset) > threshold) {
         setCurrentIndex((prev) =>
-          offset > 0
+          swipeOffset > 0
             ? (prev - 1 + images.length) % images.length
             : (prev + 1) % images.length
         );
       }
-      setIsDragging(false);
-      setOffset(0);
+      setIsSwiping(false);
+      setSwipeOffset(0);
     },
     trackMouse: true,
     preventDefaultTouchmoveEvent: true,
   });
+
+  const getCardStyle = (positionIndex, dragOffset) => {
+    const position = positionIndex - 1; // -1: left, 0: center, 1: right
+    const offsetPercentage = (dragOffset / containerWidth) * 100;
+
+    // Calculate dynamic values
+    const distanceFromCenter = Math.abs(position * 100 + offsetPercentage);
+    const scale = 1 - distanceFromCenter * 0.003;
+    const opacity = 1 - distanceFromCenter * 0.005;
+    const zIndex = Math.round(10 - distanceFromCenter / 20);
+
+    // Smooth transition between positions
+    let transform = "";
+    if (isSwiping) {
+      transform = `translateX(calc(${position * 80}% + ${
+        offsetPercentage * 0.7
+      }px)) scale(${scale})`;
+    } else {
+      transform = `translateX(${position * 80}%) scale(${scale})`;
+    }
+
+    return {
+      transform,
+      opacity,
+      zIndex,
+      transition: isSwiping
+        ? "none"
+        : "all 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
+      filter:
+        position === 0
+          ? "drop-shadow(0 8px 15px rgba(0,0,0,0.3))"
+          : "drop-shadow(0 4px 8px rgba(0,0,0,0.2))",
+    };
+  };
 
   return (
     <div
@@ -154,27 +189,22 @@ function Gallery() {
         className="carousel-track"
         {...swipeHandlers}
       >
-        {getAdjacentImages().map(
-          (image, index) =>
-            image && (
-              <div
-                key={`${image.src}-${index}`}
-                className={`gallery-card ${index === 1 ? "main" : "side"}`}
-                style={getCardStyle(index, offset)}
-              >
-                <img
-                  src={image.src}
-                  alt={image.title}
-                  draggable="false"
-                />
-                {index === 1 && (
-                  <div className="image-info">
-                    <h3>{image.title}</h3>
-                  </div>
-                )}
-              </div>
-            )
-        )}
+        {getVisibleImages().map((image, index) => (
+          <div
+            key={`${image.src}-${index}`}
+            className={`gallery-card ${index === 1 ? "main" : "side"}`}
+            style={getCardStyle(index, swipeOffset)}
+          >
+            <img
+              src={image.src}
+              alt={image.title}
+              draggable="false"
+            />
+            <div className="image-info">
+              <h3>{image.title}</h3>
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="category-container">
@@ -202,49 +232,12 @@ function Gallery() {
                 alt={`${cat} icon`}
                 className="category-icon"
               />
-              {cat.charAt(0).toUpperCase() + cat.slice(1)}
             </div>
           );
         })}
       </div>
     </div>
   );
-
-  function getCardStyle(positionIndex, dragOffset) {
-    const isMain = positionIndex === 1;
-    const position = positionIndex - 1; // -1: left, 0: center, 1: right
-
-    // Base transforms without dragging
-    let transform = "";
-    let scale = 1;
-    let zIndex = 1;
-    let opacity = 0.8;
-
-    if (isMain) {
-      transform = `translateX(${dragOffset}px)`;
-      scale = 1;
-      zIndex = 3;
-      opacity = 1;
-    } else {
-      const basePosition = position * 80; // 80% offset for side images
-      transform = `translateX(calc(${basePosition}% + ${dragOffset * 0.5}px))`;
-      scale = 0.7;
-      zIndex = 1;
-      opacity = 0.8 - Math.abs(dragOffset) / 1000;
-    }
-
-    return {
-      transform: `${transform} scale(${scale})`,
-      zIndex,
-      opacity,
-      transition: isDragging
-        ? "none"
-        : "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
-      filter: isMain
-        ? "drop-shadow(0 8px 15px rgba(0,0,0,0.3))"
-        : "drop-shadow(0 4px 8px rgba(0,0,0,0.2))",
-    };
-  }
 }
 
 export default Gallery;

@@ -18,6 +18,26 @@ body, html {
     animation: App-logo-spin infinite 20s linear;
   }
 }
+#touch-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10; /* Above background, below content */
+}
+.cursor-effect {
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: background 0.2s ease, transform 0.08s ease-out;
+  z-index: 9999;
+}
 
 .App-header {
   background-color: #282c34;
@@ -57,14 +77,16 @@ font-style: normal;
   justify-content: center;
   text-align: center;
   color: white;
-  font-family: "audrielle-no1", sans-serif;
+  font-family: "lindsey-signature", sans-serif;
+font-weight: 400;
+font-style: normal;
 }
 
 .home-overlay {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .home-content {
@@ -236,7 +258,6 @@ font-style: normal;
   align-items: center;
   padding: 60px 20px;
   overflow: hidden;
-  font-family: "audrielle-no1", sans-serif;
 }
 
 .gallery-title {
@@ -245,7 +266,7 @@ font-style: normal;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
   margin-bottom: 20px;
   z-index: 2;
-  font-family: "audrielle-no1", sans-serif;
+  font-family: "lindsey-signature", sans-serif;
   font-weight: 400;
   text-align: center;
 }
@@ -305,14 +326,15 @@ font-style: normal;
   margin-top: 15px;
   color: white;
   text-align: center;
+  font-size: 1.6rem;
+  font-weight:200;
+  font-family: "raleway", sans-serif;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
 }
 .image-info h3 {
   font-size: 1.6rem;
   font-weight:200;
-  font-style: italic;
-  margin: 0;
-  font-family: "audrielle-no2";
+  font-family: "raleway", sans-serif;
 }
 
 .category-container {
@@ -364,9 +386,7 @@ font-style: normal;
     font-size: 3rem;
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
     font-weight:200;
-    font-style: italic;
-    margin: 0;
-    font-family: "audrielle-no2";
+    font-family: "lindsey-signature", sans-serif;
     
   }
   
@@ -399,6 +419,7 @@ font-style: normal;
 @media (max-width: 480px) {
   .gallery-title {
     font-size: 2.5rem;
+    font-family: "lindsey-signature", sans-serif;
   }
   
   .carousel-track {

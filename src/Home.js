@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import TouchCanvas from "./CursorEffect"; // Assuming you have a CursorEffect component
 
 function Home() {
   const navigate = useNavigate();
@@ -16,16 +17,35 @@ function Home() {
 
   return (
     <div className="home-container">
+      <TouchCanvas />
       <div className="home-overlay"></div>{" "}
       {/* Background overlay for better readability */}
       <div className="home-content">
         <div className="container">
           {/* Artist Line Art */}
-          <img
+          {/* <img
             src="./cabrereaLine.png"
             alt="Artist Line Art"
             className="artist-image"
-          />
+          /> */}
+          <video
+            autoPlay
+            loop
+            muted
+            className="artist-image"
+            style={{ width: "100%", height: "auto" }}
+          >
+            {" "}
+            <source
+              src="/lineart.webm"
+              type="video/webm"
+            />
+            <source
+              src="/lineart.mov"
+              type="video/quicktime"
+            />
+            Your browser does not support the video tag.
+          </video>
 
           {/* Title and Subtitle */}
           <div className="title-container">

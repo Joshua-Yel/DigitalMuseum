@@ -1,4 +1,4 @@
-/* Painting.css */
+Painting.css
 :root {
     --opacity-front: 1;
     --opacity-back: 0.8;
@@ -71,8 +71,12 @@
   /* Mobile styles */
   @media (max-width: 768px) {
     .gallery-title {
-      font-size: 1.5rem;
+      font-size: 2.5rem;
       margin-bottom: 20px;
+
+      font-family: "lindsey-signature", sans-serif;
+font-weight: 650;
+font-style: normal;
     }
   
     .carousel-track {
