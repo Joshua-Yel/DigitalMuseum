@@ -39,10 +39,7 @@ function Home() {
             <source
               src="/lineart.webm"
               type="video/webm"
-            />
-            <source
-              src="/lineart.mov"
-              type="video/quicktime"
+              style={{ width: "auto", height: "170%" }}
             />
             Your browser does not support the video tag.
           </video>
