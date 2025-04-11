@@ -180,6 +180,18 @@ function Gallery() {
       className="gallery-container"
       ref={containerRef}
     >
+      <button
+        className="back-button"
+        onClick={() => navigate("/")}
+        aria-label="Go back"
+      >
+        <img
+          src="https://img.icons8.com/ios-filled/50/ffffff/left.png"
+          alt="Back"
+          className="back-icon"
+        />
+      </button>
+
       <h1 className="gallery-title">
         {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}{" "}
         Gallery

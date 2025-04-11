@@ -27,6 +27,30 @@ body, html {
   pointer-events: none;
   z-index: 10; /* Above background, below content */
 }
+
+.back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.back-icon {
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  transition: transform 0.2s ease;
+}
+
+.back-button:hover .back-icon {
+  transform: scale(1.1);
+}
+
+
 .cursor-effect {
   position: fixed;
   width: 50px;
@@ -332,7 +356,7 @@ font-style: normal;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
 }
 .image-info h3 {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight:200;
   font-family: "raleway", sans-serif;
 }
@@ -456,8 +480,8 @@ font-style: normal;
 
 /* ======= Icon Styling ======= */
 .category-item img {
-  width: 50px;  /* Adjust size based on design */
-  height: 50px;
+  width: 60px;
+  height: 60px;
   margin-bottom: 8px; /* Space between icon and text */
   filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2)); /* Optional: Add slight shadow */
 }
@@ -504,8 +528,8 @@ font-style: normal;
   }
 
   .category-item img {
-    width: 35px;
-    height: 35px;
+    width: 60px;
+    height: 60px;
   }
   .image-title {
     font-size: 0.8rem;
